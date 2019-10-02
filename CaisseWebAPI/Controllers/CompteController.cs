@@ -31,5 +31,12 @@ namespace CaisseWebAPI.Controllers
             return _compteRepository.RetreiveAll();
         }
 
+        [HttpGet("{id}")]
+        public Compte GetById(int id)
+        {
+
+            return _compteRepository.RetreiveById(id);
+        }
+
     }
 }
