@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\CaisseWebDAL\CaisseWebDAL.csproj" />
   </ItemGroup>
 
 </Project>
