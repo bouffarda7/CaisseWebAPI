@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CaisseWebDAL.Models
@@ -27,4 +28,5 @@ namespace CaisseWebDAL.Models
         public bool StatusCompte { get; set; }
 
     }
+
 }
