@@ -18,11 +18,14 @@ namespace CaisseWebAPI.Controllers
 
         private readonly ILogger<CompteController> _logger;
         private readonly CompteRepositoryImpl _compteRepository;
+        private readonly AdresseRepositoryImpl _adresseRepository;
 
-        public CompteController(ILogger<CompteController> logger, CompteRepositoryImpl compteRepositoryImpl)
+        public CompteController(ILogger<CompteController> logger, CompteRepositoryImpl compteRepositoryImpl,
+            AdresseRepositoryImpl adresseRepositoryImpl)
         {
             _logger = logger;
             _compteRepository = compteRepositoryImpl;
+            _adresseRepository = adresseRepositoryImpl;
         }
 
 
@@ -95,6 +98,9 @@ namespace CaisseWebAPI.Controllers
 
                 if(!InputValidationHelper.IsValidAddress(compte.Adresse))
                     return BadRequest("Adresse invalide");
+
+                _adresseRepository.Create(compte.Adresse);
+                _compteRepository.Create(compte);
 
                 return Created("", "");
             }

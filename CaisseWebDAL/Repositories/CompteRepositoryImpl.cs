@@ -10,9 +10,43 @@ namespace CaisseWebDAL.Repositories
 {
     public class CompteRepositoryImpl : MySqlRepository<Compte>
     {
-        public override void Create(Compte objet)
+        public override void Create(Compte compte)
         {
-            throw new NotImplementedException();
+            try
+            {
+                EstablishConnection();
+
+                MySqlCommand cmd = new MySqlCommand
+                {
+                    CommandText = "INSERT INTO compte VALUES(NULL, @nom, @prenom, " +
+                    "@email, @idadresse, @nomutil, @mp, DEFAULT, @datenaissance, DEFAULT);",
+                    Connection = _conn,
+                    CommandType = CommandType.Text
+                };
+
+                cmd.Parameters.AddWithValue("@nom", compte.NomPers);
+                cmd.Parameters.AddWithValue("@prenom", compte.PrenomPers);
+                cmd.Parameters.AddWithValue("@email", compte.EmailPers);
+                cmd.Parameters.AddWithValue("@idadresse", compte.Adresse.Id);
+                cmd.Parameters.AddWithValue("@nomutil", compte.NomUtil);
+                cmd.Parameters.AddWithValue("@mp", BCrypt.Net.BCrypt.HashPassword(compte.MPUtil));
+                cmd.Parameters.AddWithValue("@datenaissance", compte.DateNaissance);
+
+
+                int NombreLigneInserees = cmd.ExecuteNonQuery();
+
+                if (NombreLigneInserees != 1)
+                    throw new Exception();
+
+                compte.Id = Convert.ToInt32(cmd.LastInsertedId);
+
+                CloseConnection();
+
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
 
         public override void Delete(int id)

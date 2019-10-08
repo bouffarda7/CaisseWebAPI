@@ -49,7 +49,6 @@ namespace CaisseWebDAL.Helpers
 
         public static bool IsValidBirthDate(DateTime birthday)
         {
-            int AGE_REQUIS = 18;
 
             if (birthday == null)
                 return false;
@@ -80,14 +79,19 @@ namespace CaisseWebDAL.Helpers
             
         }
 
-        //TODO VALIDER ADRESSE 03-10-2019 ( MAX 20-10-2019)
-        public static bool IsValidAddress(object adresse)
+        public static bool IsValidAddress(object address)
         {
-            
-            return adresse != null;
+            if (address == null)
+                return false;
 
-           
-            
+            Models.Adresse Adresse = (Models.Adresse)address;
+
+            if (string.IsNullOrEmpty(Adresse.NoAdresse) || string.IsNullOrEmpty(Adresse.Rue) ||
+                string.IsNullOrEmpty(Adresse.Ville) || string.IsNullOrEmpty(Adresse.CodePostal))
+                return false;
+
+            return true;
+   
         }
 
 
