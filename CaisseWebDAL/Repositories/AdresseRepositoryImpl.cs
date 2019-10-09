@@ -11,7 +11,6 @@ namespace CaisseWebDAL.Repositories
     {
         public override void Create(Adresse adresse)
         {
-            int Id;
 
             try
             {
