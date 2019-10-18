@@ -55,7 +55,8 @@ namespace CaisseWebAPI.Controllers
 
                 _employeRepository.Create(Employe);
                 
-                return Ok("OK");
+                if(Employe.Id != 0)
+                    return Ok("OK");
             }
             catch(Exception e)
             {
