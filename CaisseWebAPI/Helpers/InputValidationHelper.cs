@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CaisseWebAPI.DAL;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace CaisseWebDAL.Helpers
+namespace CaisseWebAPI.Helpers
 {
     public static class InputValidationHelper
     {
@@ -79,21 +80,22 @@ namespace CaisseWebDAL.Helpers
             
         }
 
-        public static bool IsValidAddress(object address)
-        {
+       public static bool IsValidAddress(Adresse address)
+       {
+           
             if (address == null)
                 return false;
 
-            Models.Adresse Adresse = (Models.Adresse)address;
+            Adresse Adresse = address;
 
-            if (string.IsNullOrEmpty(Adresse.NoAdresse) || string.IsNullOrEmpty(Adresse.Rue) ||
+            if (string.IsNullOrEmpty(Adresse.NumeroCivique) || string.IsNullOrEmpty(Adresse.Rue) ||
                 string.IsNullOrEmpty(Adresse.Ville) || string.IsNullOrEmpty(Adresse.CodePostal))
                 return false;
 
             return true;
    
-        }
-
+       }
+        
 
     }
 }

@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
-using BCrypt.Net;
-using CaisseWebDAL.Helpers;
-using CaisseWebDAL.Models;
-using CaisseWebDAL.Repositories;
+using CaisseWebAPI.DAL;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -18,27 +14,27 @@ namespace CaisseWebAPI.Controllers
     {
 
         private readonly ILogger<EmployeController> _logger;
-        private readonly EmployeRepositoryImpl _employeRepository;
-        private readonly CompteRepositoryImpl _compteRepository;
+        private readonly CaisseWebDbContext _db;
 
-        public EmployeController(ILogger<EmployeController> logger, 
-            EmployeRepositoryImpl employeRepositoryImpl, CompteRepositoryImpl compteRepositoryImpl)
+
+        public EmployeController(ILogger<EmployeController> logger, CaisseWebDbContext context)
         {
             _logger = logger;
-            _employeRepository = employeRepositoryImpl;
-            _compteRepository = compteRepositoryImpl;
+
+            _db = context;
         }
 
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Employe> Get()
         {
 
-            return null;
+            List<Employe> Employes = _db.Employe.ToList();
+            return Employes == null ? new List<Employe>() : Employes;
         }
 
         [HttpPost]
-        public IActionResult CreerNouvelEmploye(Employe Employe)
-        {
+        public IActionResult CreerNouvelEmploye(string Employe)
+        {/*
             try
             {
                 if (!InputValidationHelper.IsValidUsername(Employe.NomUtilisateur))
@@ -66,26 +62,26 @@ namespace CaisseWebAPI.Controllers
 
 
             
-
+            */
             return BadRequest("Error");
         }
 
 
         [HttpPost("login")]
-        public IActionResult ConnexionEmploye(Employe EmployeCred)
+        public IActionResult ConnexionEmploye(string EmployeCred)
         {
-            if (!InputValidationHelper.IsValidUsername(EmployeCred.NomUtilisateur))
+            /*if (!InputValidationHelper.IsValidUsername(EmployeCred.NomUtilisateur))
                 return BadRequest("Informations invalides");
 
             if (!InputValidationHelper.IsValidPassword(EmployeCred.MPEmploye))
-                return BadRequest("Informations invalides");
+                return BadRequest("Informations invalides");*/
 
-            if(BCrypt.Net.BCrypt.Verify(EmployeCred.MPEmploye, 
+            /*if(BCrypt.Net.BCrypt.Verify(EmployeCred.MPEmploye, 
                 _employeRepository.RetreivePasswordByUsername(EmployeCred.NomUtilisateur)))              
             {
                 return Ok("TOKEN");
             }
-
+            */
             return BadRequest("Error");
         }
     }

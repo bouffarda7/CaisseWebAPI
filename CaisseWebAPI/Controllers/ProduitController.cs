@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CaisseWebDAL.Models;
-using CaisseWebDAL.Repositories;
+using CaisseWebAPI.DAL;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,20 +15,20 @@ namespace CaisseWebAPI.Controllers
     {
 
         private readonly ILogger<ProduitController> _logger;
-        private readonly ProduitRepositoryImpl _produitRepository;
+        private readonly CaisseWebDbContext _db;
 
 
-        public ProduitController(ILogger<ProduitController> logger, ProduitRepositoryImpl produitRepositoryImpl)
+        public ProduitController(ILogger<ProduitController> logger, CaisseWebDbContext context)
         {
             _logger = logger;
-            _produitRepository = produitRepositoryImpl;
+            _db = context;
         }
 
         [HttpGet]
         public IEnumerable<Produit> Get()
         {
-
-            return _produitRepository.RetreiveAll();
+            List<Produit> Produits = _db.Produit.ToList();
+            return Produits == null ? new List<Produit>() : Produits;
         }
     }
 }

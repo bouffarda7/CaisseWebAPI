@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace CaisseWebDAL.Models
+namespace CaisseWebAPI.DAL
 {
     public class Produit : DAO
     {
@@ -18,8 +19,10 @@ namespace CaisseWebDAL.Models
 
         public bool StatusProduit { get; set; }
 
-        public Rabais Rabais { get; set; }
+        public List<RelProduitCategorie> RelProduitCategories { get; set; }
 
-        public List<CategorieProduit> CategoriesProduit { get; set; }
+        public int? IdRabais { get; set; }
+
+        public Rabais Rabais { get; set; }
     }
 }

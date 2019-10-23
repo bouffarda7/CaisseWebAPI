@@ -1,4 +1,4 @@
-﻿using CaisseWebDAL.Helpers;
+﻿/*using CaisseWebDAL.Helpers;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace CaisseWebDAL.Repositories
 {
     public abstract class MySqlRepository<T> where T : Models.DAO
     {
-        protected MySqlConnection _conn = null;
+        //protected MySqlConnection _conn = null;
 
         public abstract List<T> RetreiveAll();
 
@@ -22,7 +22,7 @@ namespace CaisseWebDAL.Repositories
 
         protected void EstablishConnection()
         {
-            try
+            /*try
             {
                 _conn = new MySqlConnection
                 {
@@ -37,11 +37,11 @@ namespace CaisseWebDAL.Repositories
             }
         }
 
-        protected void CloseConnection()
+        /*protected void CloseConnection()
         {
             if (_conn.State == System.Data.ConnectionState.Open)
                 _conn.Close();
         }
     }
 }
-
+*/
