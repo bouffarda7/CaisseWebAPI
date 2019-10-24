@@ -1,5 +1,6 @@
 ﻿using CaisseWebAPI.DAL;
 using CaisseWebAPI.Helpers;
+using CaisseWebAPI.Models;
 using CaisseWebDAL.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -43,32 +44,35 @@ namespace CaisseWebAPI.Controllers
         }
 
         [HttpPost("login")]
-        public IActionResult Connexion([FromBody] Compte compteConnexion)
+        public IActionResult Connexion([FromBody] CompteConnexion compteConnexion)
         {
 
-           // Compte compte = new Compte();
-            return null;
+            Compte compte = new Compte();
+           
 
-            /*try
+            try
             {
+                if (compteConnexion == null)
+                    throw new ArgumentNullException(nameof(compteConnexion));
+
                 if (InputValidationHelper.IsValidEmail(compteConnexion.NomDeConnexion))
-                    compte = _compteRepository.RetreiveByEmail(compteConnexion.NomDeConnexion);
+                    compte = _db.Compte.Where(c => c.Email == compteConnexion.NomDeConnexion).FirstOrDefault();
                 else
-                    compte = _compteRepository.RetreiveByUsername(compteConnexion.NomDeConnexion);
+                    compte = _db.Compte.Where(c => c.Email == compteConnexion.NomDeConnexion).FirstOrDefault();
 
-                if (string.IsNullOrEmpty(compte.MPUtil))
-                    throw new Exception();
+                if (string.IsNullOrEmpty(compte.MotPasse))
+                    throw new ArgumentNullException(compte.MotPasse);
 
-                if (!PasswordHelper.VerifyPassword(compteConnexion.MotDePasse, compte.MPUtil))
-                    throw new Exception();
+                if (!PasswordHelper.VerifyPassword(compteConnexion.MotDePasse, compte.MotPasse))
+                    throw new ArgumentException(compte.MotPasse);
 
                 return Ok("allo");
             }
-            catch(Exception e)
+            catch (ArgumentNullException)
             {
-                _logger.LogInformation(e.Message);
                 return Unauthorized("Informations erronées");
-            }*/
+
+            }
         }
 
         [HttpPost("signup")]
@@ -77,6 +81,9 @@ namespace CaisseWebAPI.Controllers
             Adresse adresse;
             try
             {
+                if (compte == null)
+                    throw new ArgumentNullException(nameof(compte));
+
 
                 if (!InputValidationHelper.IsValidEmail(compte.Email))
                     return BadRequest("Adresse courriel invalide");
@@ -111,15 +118,13 @@ namespace CaisseWebAPI.Controllers
                 _db.Add(compte);
                 _db.SaveChanges();
 
-               // _adresseRepository.Create(compte.Adresse);
-                //_compteRepository.Create(compte);
 
                 return Created("", "");
             }
-            catch(Exception e)
+            catch (ArgumentNullException)
             {
-                _logger.LogInformation(e.Message);
-                return BadRequest("Informations erronées");
+                return Unauthorized("Informations erronées");
+
             }
         }
 

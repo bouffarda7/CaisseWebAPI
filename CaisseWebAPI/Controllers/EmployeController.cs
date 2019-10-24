@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using CaisseWebAPI.DAL;
+using CaisseWebAPI.Helpers;
+using CaisseWebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -33,56 +35,93 @@ namespace CaisseWebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult CreerNouvelEmploye(string Employe)
-        {/*
+        public IActionResult CreerNouvelEmploye(Employe Employe)
+        {
             try
             {
+                if (Employe == null)
+                    throw new ArgumentNullException(nameof(Employe));
+
+                if (Employe.Compte == null)
+                    throw new NullReferenceException();
+
                 if (!InputValidationHelper.IsValidUsername(Employe.NomUtilisateur))
-                    return BadRequest("Informations invalides");
+                    throw new ArgumentException(Employe.NomUtilisateur);
 
-                if (!InputValidationHelper.IsValidPassword(Employe.MPEmploye))
-                    return BadRequest("Informations invalides");
+                if (!InputValidationHelper.IsValidPassword(Employe.MotPasse))
+                    throw new ArgumentException(Employe.MotPasse);
 
-                Employe.Compte = _compteRepository.RetreiveByEmail(Employe.Compte.EmailPers);
+                Employe.Compte = _db.Compte.Where(c => c.Email == Employe.Compte.Email).FirstOrDefault();
                 if (Employe.Compte.Id == 0)
                 {
                     BadRequest("Error");
                 }
 
-                _employeRepository.Create(Employe);
+                _db.Employe.Add(Employe);
+                _db.SaveChanges();
                 
                 if(Employe.Id != 0)
                     return Ok("OK");
-            }
-            catch(Exception e)
-            {
-                _logger.LogInformation(e.Message);
+
                 return BadRequest("Error");
             }
+            catch (ArgumentNullException)
+            {
+                return BadRequest("Requête invalide");
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Informations erronées");
+            }
+            catch(NullReferenceException)
+            {
+                return BadRequest("Requête invalide");
+            }
 
-
-            
-            */
-            return BadRequest("Error");
+           
         }
 
 
         [HttpPost("login")]
-        public IActionResult ConnexionEmploye(string EmployeCred)
+        public IActionResult ConnexionEmploye(CompteConnexion CompteConnexion)
         {
-            /*if (!InputValidationHelper.IsValidUsername(EmployeCred.NomUtilisateur))
-                return BadRequest("Informations invalides");
-
-            if (!InputValidationHelper.IsValidPassword(EmployeCred.MPEmploye))
-                return BadRequest("Informations invalides");*/
-
-            /*if(BCrypt.Net.BCrypt.Verify(EmployeCred.MPEmploye, 
-                _employeRepository.RetreivePasswordByUsername(EmployeCred.NomUtilisateur)))              
+            string motPasse = "";
+            try
             {
-                return Ok("TOKEN");
+                if (CompteConnexion == null)             
+                    throw new ArgumentNullException(nameof(CompteConnexion));
+
+
+                if (!InputValidationHelper.IsValidUsername(CompteConnexion.NomDeConnexion))
+                    throw new ArgumentException(CompteConnexion.NomDeConnexion);
+
+                if (!InputValidationHelper.IsValidPassword(CompteConnexion.MotDePasse))
+                    throw new ArgumentException(CompteConnexion.MotDePasse);
+
+                motPasse = _db.Employe.Where(e => e.NomUtilisateur == CompteConnexion.NomDeConnexion)
+                    .Select(e => e.MotPasse).FirstOrDefault();
+
+                if(string.IsNullOrEmpty(motPasse))
+                    throw new ArgumentException(CompteConnexion.NomDeConnexion);
+
+
+
+                if (!BCrypt.Net.BCrypt.Verify(CompteConnexion.MotDePasse, motPasse))
+                    throw new ArgumentException(CompteConnexion.MotDePasse);
+                
+                
+                return Ok("TOKEN");              
+
             }
-            */
-            return BadRequest("Error");
+            catch (ArgumentNullException)
+            {
+                return BadRequest("Requête invalide");
+            }
+            catch (ArgumentException)
+            {
+                return BadRequest("Informations erronées");
+            }
+
         }
     }
 }
