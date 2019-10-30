@@ -31,6 +31,6 @@ namespace CaisseWebAPI.DAL
 
         public List<Employe> Employe { get; set; }
 
-
+        public List<Facture> Factures { get; set; }
     }
 }

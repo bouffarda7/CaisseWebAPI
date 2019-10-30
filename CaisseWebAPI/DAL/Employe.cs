@@ -15,6 +15,8 @@ namespace CaisseWebAPI.DAL
 
         public Compte Compte { get; set; }
         public int IdCompte { get; set; }
+
+        public List<Facture> Factures { get; set; }
     }
 }
 

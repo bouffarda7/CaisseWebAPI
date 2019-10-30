@@ -20,5 +20,7 @@ namespace CaisseWebAPI.DAL
 
         public List<Produit> Produits { get; set; }
 
+        public List<Facture> Factures { get; set; }
+
     }
 }

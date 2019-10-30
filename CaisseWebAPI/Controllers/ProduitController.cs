@@ -30,5 +30,22 @@ namespace CaisseWebAPI.Controllers
             List<Produit> Produits = _db.Produit.ToList();
             return Produits == null ? new List<Produit>() : Produits;
         }
+
+        [HttpPost]
+        public IActionResult Add(Produit produit,string origin)
+        {
+            try
+            {
+                if (produit == null)
+                    throw new ArgumentNullException(nameof(produit));
+            }
+            catch(ArgumentNullException)
+            {
+                return BadRequest("Requête non valide");
+            }
+
+
+            return Created(new Uri(origin), produit);
+        }
     }
 }

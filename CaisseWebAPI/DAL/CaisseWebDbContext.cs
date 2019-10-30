@@ -19,6 +19,7 @@ namespace CaisseWebAPI.DAL
         public DbSet<RelProduitCategorie> RelProduitCategorie { get; set; }
         public DbSet<TypeRabais> TypeRabais { get; set; }
         public DbSet<Rabais> Rabais { get; set; }
+        public DbSet<Facture> Facture { get; set; }
 
         public CaisseWebDbContext(DbContextOptions<CaisseWebDbContext> options) : base(options)
         {
@@ -147,6 +148,22 @@ namespace CaisseWebAPI.DAL
                 entity.Property(rabais => rabais.Param2).IsRequired(false).HasColumnType("float");
 
                 entity.HasOne(rabais => rabais.TypeRabais).WithMany(typerabais => typerabais.Rabais).HasForeignKey(rabais => rabais.IdTypeRabais);
+
+            });
+
+            modelBuilder.Entity<Facture>(entity =>
+            {
+                entity.HasKey(facture => facture.Id);
+                entity.Property(facture => facture.DateFacture).IsRequired().HasColumnType("datetime").HasDefaultValueSql("CURRENT_TIMESTAMP");
+                entity.Property(facture => facture.SousTotal).IsRequired().HasColumnType("decimal(15,4)").HasDefaultValue(0.0);
+                entity.Property(facture => facture.TotalTaxe).IsRequired().HasColumnType("decimal(15,4)").HasDefaultValue(0.0);
+                entity.Property(facture => facture.TotalAvecTaxe).IsRequired().HasColumnType("decimal(15,4)").HasDefaultValue(0.0); 
+                entity.Property(facture => facture.CommentaireFacture).HasColumnType("varchar(250)");
+
+                entity.HasOne(facture => facture.Compte).WithMany(compte => compte.Factures).HasForeignKey(facture => facture.IdCompte);
+                entity.HasOne(facture => facture.Employe).WithMany(employe => employe.Factures).HasForeignKey(facture => facture.IdEmploye);
+                entity.HasOne(facture => facture.RabaisFacture).WithMany(rabais => rabais.Factures).HasForeignKey(facture => facture.IdRabais);
+
 
             });
 
