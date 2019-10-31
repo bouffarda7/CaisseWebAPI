@@ -68,7 +68,7 @@ namespace CaisseWebAPI.DAL
                 entity.Property(compte => compte.MotPasse).HasMaxLength(60).IsRequired();
                 entity.Property(compte => compte.DateInscription).IsRequired().HasColumnType("datetime");
                 entity.Property(compte => compte.DateNaissance).IsRequired().HasColumnType("datetime");
-                entity.Property(compte => compte.StatusCompte).IsRequired().HasDefaultValueSql("1");
+                entity.Property(compte => compte.StatusCompte).IsRequired().HasDefaultValue(1);
                 entity.HasOne(compte => compte.Adresse).WithMany(adresse => adresse.Comptes).HasForeignKey(compte => compte.IdAdresse);
            
                 entity.HasIndex(compte => compte.Email).IsUnique();
@@ -88,7 +88,7 @@ namespace CaisseWebAPI.DAL
                 entity.HasKey(employe => employe.Id);
                 entity.Property(employe => employe.NomUtilisateur).HasMaxLength(25).IsRequired();
                 entity.Property(employe => employe.MotPasse).HasMaxLength(60).IsRequired();
-                entity.Property(employe => employe.EstAdmin).IsRequired().HasDefaultValueSql("0");
+                entity.Property(employe => employe.EstAdmin).IsRequired().HasDefaultValue(0);
                 entity.Property(employe => employe.DateEmbauche).IsRequired().HasColumnType("datetime").HasDefaultValueSql("CURRENT_TIMESTAMP");
                 entity.Property(employe => employe.DateFinEmploi).HasColumnType("datetime");
 
