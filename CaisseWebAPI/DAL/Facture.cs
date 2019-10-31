@@ -31,5 +31,7 @@ namespace CaisseWebAPI.DAL
 
         public string CommentaireFacture { get; set; }
 
+        public List<LigneFacture> LignesFacture { get; set; }
+
     }
 }

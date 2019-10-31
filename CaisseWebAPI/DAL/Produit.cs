@@ -24,5 +24,8 @@ namespace CaisseWebAPI.DAL
         public int? IdRabais { get; set; }
 
         public Rabais Rabais { get; set; }
+
+        public List<LigneFacture> LignesFacture { get; set; }
+
     }
 }

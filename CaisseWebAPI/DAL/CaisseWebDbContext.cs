@@ -20,6 +20,7 @@ namespace CaisseWebAPI.DAL
         public DbSet<TypeRabais> TypeRabais { get; set; }
         public DbSet<Rabais> Rabais { get; set; }
         public DbSet<Facture> Facture { get; set; }
+        public DbSet<LigneFacture> LigneFacture { get; set; }
 
         public CaisseWebDbContext(DbContextOptions<CaisseWebDbContext> options) : base(options)
         {
@@ -165,6 +166,20 @@ namespace CaisseWebAPI.DAL
                 entity.HasOne(facture => facture.RabaisFacture).WithMany(rabais => rabais.Factures).HasForeignKey(facture => facture.IdRabais);
 
 
+            });
+
+
+            modelBuilder.Entity<LigneFacture>(entity =>
+            {
+                entity.HasKey(lignefacture => new { lignefacture.IdFacture, lignefacture.IdProduit });
+                entity.Property(lignefacture => lignefacture.Quantite).IsRequired();
+                entity.Property(lignefacture => lignefacture.PrixRegulier).IsRequired().HasColumnType("decimal(15,4)");
+                entity.Property(lignefacture => lignefacture.PrixAvecRabais).HasColumnType("decimal(15,4)");
+                entity.Property(lignefacture => lignefacture.PrixTotalLigne).IsRequired().HasColumnType("decimal(15,4)");
+
+
+                entity.HasOne(lignefacture => lignefacture.Produit).WithMany(produit => produit.LignesFacture).HasForeignKey(lignefacture => lignefacture.IdProduit);
+                entity.HasOne(lignefacture => lignefacture.Facture).WithMany(facture => facture.LignesFacture).HasForeignKey(lignefacture => lignefacture.IdFacture);
             });
 
         }

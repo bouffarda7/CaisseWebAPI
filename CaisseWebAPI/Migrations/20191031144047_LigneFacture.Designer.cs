@@ -3,14 +3,16 @@ using System;
 using CaisseWebAPI.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CaisseWebAPI.Migrations
 {
     [DbContext(typeof(CaisseWebDbContext))]
-    partial class CaisseWebDbContextModelSnapshot : ModelSnapshot
+    [Migration("20191031144047_LigneFacture")]
+    partial class LigneFacture
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
