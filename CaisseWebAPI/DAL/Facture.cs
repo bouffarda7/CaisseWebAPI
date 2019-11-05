@@ -33,5 +33,7 @@ namespace CaisseWebAPI.DAL
 
         public List<LigneFacture> LignesFacture { get; set; }
 
+        public List<Paiement> Paiements { get; } 
+
     }
 }

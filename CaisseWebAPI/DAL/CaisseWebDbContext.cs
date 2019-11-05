@@ -22,6 +22,8 @@ namespace CaisseWebAPI.DAL
         public DbSet<Facture> Facture { get; set; }
         public DbSet<LigneFacture> LigneFacture { get; set; }
         public DbSet<MethodePaiement> MethodePaiement { get; set; }
+        public DbSet<Paiement> Paiement { get; set; }
+
 
         public CaisseWebDbContext(DbContextOptions<CaisseWebDbContext> options) : base(options)
         {
@@ -189,6 +191,17 @@ namespace CaisseWebAPI.DAL
                 entity.Property(methodepaiement => methodepaiement.Methode).IsRequired().HasColumnType("varchar(25)");
 
                 entity.HasIndex(methodepaiement => methodepaiement.Methode).IsUnique();
+
+            });
+
+            modelBuilder.Entity<Paiement>(entity => 
+            {
+                entity.HasKey(paiement => paiement.Id);
+                entity.Property(paiement => paiement.MontantPaiment).IsRequired().HasColumnType("decimal(15,4)");
+
+                entity.HasOne(paiement => paiement.Facture).WithMany(facture => facture.Paiements).HasForeignKey(paiement => paiement.IdFacture);
+                entity.HasOne(paiement => paiement.MethodePaiement).WithMany(methodepaiement => methodepaiement.Paiements).HasForeignKey(paiement => paiement.IdMethode);
+
 
             });
 

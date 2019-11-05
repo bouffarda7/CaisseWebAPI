@@ -8,5 +8,7 @@ namespace CaisseWebAPI.DAL
     public class MethodePaiement : DAO
     {
         public string Methode { get; set; }
+
+        public List<Paiement> Paiements { get; }
     }
 }
