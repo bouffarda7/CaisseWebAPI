@@ -4,6 +4,7 @@ using System.Linq;
 using CaisseWebAPI.DAL;
 using CaisseWebAPI.Helpers;
 using CaisseWebAPI.Models;
+using CaisseWebDAL.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -27,11 +28,15 @@ namespace CaisseWebAPI.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Employe> Get()
+        public IActionResult Get(string token)
         {
+            if (TokenHelper.ValidateToken(token))
+            {
+                List<Employe> Employes = _db.Employe.ToList();
+                return Employes == null ? Ok(new List<Employe>()) : Ok(Employes);
+            }
+            return NotFound();
 
-            List<Employe> Employes = _db.Employe.ToList();
-            return Employes == null ? new List<Employe>() : Employes;
         }
 
         [HttpPost]
@@ -56,6 +61,8 @@ namespace CaisseWebAPI.Controllers
                 {
                     BadRequest("Error");
                 }
+
+                Employe.MotPasse = PasswordHelper.HashPassword(Employe.MotPasse);
 
                 _db.Employe.Add(Employe);
                 _db.SaveChanges();
@@ -85,7 +92,7 @@ namespace CaisseWebAPI.Controllers
         [HttpPost("login")]
         public IActionResult ConnexionEmploye(CompteConnexion CompteConnexion)
         {
-            string motPasse = "";
+            var employe = new Employe();
             try
             {
                 if (CompteConnexion == null)             
@@ -98,19 +105,19 @@ namespace CaisseWebAPI.Controllers
                 if (!InputValidationHelper.IsValidPassword(CompteConnexion.MotDePasse))
                     throw new ArgumentException(CompteConnexion.MotDePasse);
 
-                motPasse = _db.Employe.Where(e => e.NomUtilisateur == CompteConnexion.NomDeConnexion)
-                    .Select(e => e.MotPasse).FirstOrDefault();
+                employe = _db.Employe.FirstOrDefault(e => e.NomUtilisateur == CompteConnexion.NomDeConnexion);
+                employe.Compte = _db.Compte.FirstOrDefault(c => c.Id == employe.IdCompte);
 
-                if(string.IsNullOrEmpty(motPasse))
+                if(employe == null)
                     throw new ArgumentException(CompteConnexion.NomDeConnexion);
 
 
 
-                if (!BCrypt.Net.BCrypt.Verify(CompteConnexion.MotDePasse, motPasse))
+                if (!BCrypt.Net.BCrypt.Verify(CompteConnexion.MotDePasse, employe.MotPasse))
                     throw new ArgumentException(CompteConnexion.MotDePasse);
                 
                 
-                return Ok("TOKEN");              
+                return Ok(TokenHelper.CreateToken(employe.Compte.Prenom + " " + employe.Compte.Nom,employe.Compte.Email, employe.NomUtilisateur, "employe"));              
 
             }
             catch (ArgumentNullException)
